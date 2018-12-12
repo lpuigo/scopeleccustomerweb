@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/lpuig/scopeleccustomerweb/convert"
+	"github.com/lpuig/scopeleccustomerweb/custwebrecords"
 	"github.com/lpuig/scopeleccustomerweb/recordset"
 	"golang.org/x/text/encoding/charmap"
 	"golang.org/x/text/transform"
@@ -20,18 +21,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	c := convert.NewConverterToCustomerWeb(sourcers)
-	err = c.Convert()
-	if err != nil {
-		log.Fatal("could not convert:", err)
-	}
-
 	of, err := os.Create(testoutfile)
 	if err != nil {
 		log.Fatal("could not create target file:", err)
 	}
 	defer of.Close()
-	err = c.WriteCSV(of)
+	c := convert.NewConverterToCustomerWeb(sourcers)
+	c.AddTarget("customerweb", custwebrecords.NewCustomerWebRecords(), c.SqltoCustomerweb, of)
+	err = c.Convert()
+	if err != nil {
+		log.Fatal("could not convert:", err)
+	}
+	err = c.WriteCSV()
 	if err != nil {
 		log.Fatal("could not write target file:", err)
 	}

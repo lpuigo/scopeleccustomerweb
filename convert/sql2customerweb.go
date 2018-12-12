@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err error) {
+func (c Converter) SqltoCustomerweb(i int) (cwr recordset.Record, err error) {
 	rec := c.source.Get(i)
 	cr := c.getSourceCR(i)
 	woid := fmt.Sprintf("RECIFS_%05d", i)
@@ -154,23 +154,4 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		"",
 	}
 	return
-}
-
-func (c Converter) getSourceCol(i, j int) string {
-	return c.source.Get(i)[j]
-}
-
-func (c Converter) getSourceCR(i int) map[string]string {
-	res := make(map[string]string)
-	cr := c.getSourceCol(i, c.index["COMPTE-RENDU"])
-	pairs := strings.Split(cr, "#")
-	for _, p := range pairs {
-		vals := strings.Split(p, "=")
-		val := ""
-		if len(vals) > 1 {
-			val = vals[1]
-		}
-		res[vals[0]] = val
-	}
-	return res
 }
