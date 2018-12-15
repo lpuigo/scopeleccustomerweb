@@ -26,7 +26,7 @@ func main() {
 		log.Fatal("could not create target file:", err)
 	}
 	defer of.Close()
-	c := convert.NewConverterToCustomerWeb(sourcers)
+	c := convert.NewConverter(sourcers)
 	c.AddTarget("customerweb", custwebrecords.NewCustomerWebRecords(), c.SqltoCustomerweb, of)
 	err = c.Convert()
 	if err != nil {

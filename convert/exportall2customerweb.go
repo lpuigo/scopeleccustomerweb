@@ -7,11 +7,11 @@ import (
 )
 
 func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err error) {
-	rec := c.source.Get(i)
+	rec := c.Source.Get(i)
 	cr := c.getSourceCR(i)
 	woid := fmt.Sprintf("RECIFS_%05d", i)
 	prjcode := "RecetteIFS_R2"
-	addrs := rec[c.index["ADRESSE SITE"]]
+	addrs := rec[c.Index["ADRESSE SITE"]]
 	addrss := strings.Split(addrs, ",")
 	num_voie := ""
 	voie := addrss[0]
@@ -19,7 +19,7 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		num_voie = strings.Trim(addrss[0], " ")
 		voie = strings.Trim(addrss[1], " ")
 	}
-	cp := rec[c.index["CODE POSTAL SITE"]]
+	cp := rec[c.Index["CODE POSTAL SITE"]]
 	dep := ""
 	if len(cp) > 2 {
 		dep = cp[0:2]
@@ -35,19 +35,19 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		//"Identity.Contract",
 		cr["Instgpc"] + cr["Agentetl"] + cr["Cui"] + cr["Cequip"],
 		//"Identity.WorkOrderState",
-		rec[c.index["STATUT"]],
+		rec[c.Index["STATUT"]],
 		//"Planning.PlannedDateOrdered",
-		rec[c.index["DATE AU PLUS TOT"]],
+		rec[c.Index["DATE AU PLUS TOT"]],
 		//"Planning.DateRdv",
-		rec[c.index["DATE RDV"]],
+		rec[c.Index["DATE RDV"]],
 		//"Planning.Marge",
 		cr["marge"],
 		//"Planning.ContractualDate",
 		cr["DateContractuelle"],
 		//"Templating.Criteria1",
-		rec[c.index["NOM EQUIPEMENT"]][0:3],
+		rec[c.Index["NOM EQUIPEMENT"]][0:3],
 		//"Templating.Criteria2",
-		rec[c.index["NOM EQUIPEMENT"]][3:],
+		rec[c.Index["NOM EQUIPEMENT"]][3:],
 		//"Templating.Criteria3",
 		cr["Cui"],
 		//"Templating.Criteria4",
@@ -63,7 +63,7 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		//"Coordinates.PostalCode",
 		cp,
 		//"Coordinates.City",
-		rec[c.index["VILLE SITE"]],
+		rec[c.Index["VILLE SITE"]],
 		//"Coordinates.Country",
 		"FRANCE",
 		//"Coordinates.Latitude",
@@ -71,11 +71,11 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		//"Coordinates.Longitude",
 		"",
 		//"Client.ClientFullName",
-		rec[c.index["NOM CLIENT"]],
+		rec[c.Index["NOM CLIENT"]],
 		//"Client.TelMobile",
-		rec[c.index["TELEPHONE SITE"]],
+		rec[c.Index["TELEPHONE SITE"]],
 		//"Client.TelFix",
-		rec[c.index["NOM SITE"]],
+		rec[c.Index["NOM SITE"]],
 		//"Client.MarketType",
 		cr["Cegma"],
 		//"Client.GTI",
@@ -85,7 +85,7 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		//"Connection.Node",
 		cr["Centre"] + cr["Zone"] + cr["Catpc"],
 		//"Connection.Information",
-		rec[c.index["DESCRIPTION SITE"]],
+		rec[c.Index["DESCRIPTION SITE"]],
 		//"ParticularConditions.Criteria1",
 		cr["securite"],
 		//"ParticularConditions.Criteria2",
@@ -117,15 +117,15 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 		//"Dispatching.Criteria1",
 		dep,
 		//"Dispatching.Criteria2",
-		rec[c.index["NOM EQUIPEMENT"]],
+		rec[c.Index["NOM EQUIPEMENT"]],
 		//"Dispatching.Criteria3",
 		"",
 		//"Dispatching.Criteria4",
 		"",
 		//"AdditionalInformation",
-		rec[c.index["DESCRIPTION SITE"]],
+		rec[c.Index["DESCRIPTION SITE"]],
 		//"Comment",
-		rec[c.index["DESCRIPTION"]],
+		rec[c.Index["DESCRIPTION"]],
 		//"Attachment.File1",
 		"",
 		//"Attachment.Name1",
@@ -157,12 +157,12 @@ func (c Converter) ExportallToCustomerweb(i int) (cwr recordset.Record, err erro
 }
 
 func (c Converter) getSourceCol(i, j int) string {
-	return c.source.Get(i)[j]
+	return c.Source.Get(i)[j]
 }
 
 func (c Converter) getSourceCR(i int) map[string]string {
 	res := make(map[string]string)
-	cr := c.getSourceCol(i, c.index["COMPTE-RENDU"])
+	cr := c.getSourceCol(i, c.Index["COMPTE-RENDU"])
 	pairs := strings.Split(cr, "#")
 	for _, p := range pairs {
 		vals := strings.Split(p, "=")

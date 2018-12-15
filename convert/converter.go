@@ -16,27 +16,25 @@ type target struct {
 }
 
 type Converter struct {
-	source  *recordset.RecordSet
-	index   map[string]int
+	Source  *recordset.RecordSet
+	Index   map[string]int
 	targets []target
 }
 
-func NewConverterToCustomerWeb(sourceRs *recordset.RecordSet) Converter {
+func NewConverter(sourceRs *recordset.RecordSet) Converter {
 	ind := make(map[string]int)
 	for _, col := range sourceRs.GetHeader().GetKeys() {
 		colinds, err := sourceRs.GetRecordColNumByName(col)
 		if err != nil || len(colinds) < 1 {
-			panic("could not create converter index")
+			panic("could not create converter Index")
 		}
 		ind[col] = colinds[0]
 	}
 
 	ctr := Converter{
-		source: sourceRs,
-		//target: custwebrecords.NewCustomerWebRecords(),
-		index: ind,
+		Source: sourceRs,
+		Index:  ind,
 	}
-	//ctr.convertRecord = ctr.convertExportALLRecord
 	return ctr
 }
 
@@ -50,7 +48,7 @@ func (c *Converter) AddTarget(name string, targetrecordset *recordset.RecordSet,
 }
 
 func (c Converter) Convert() error {
-	for i := 0; i < c.source.Len(); i++ {
+	for i := 0; i < c.Source.Len(); i++ {
 		for _, tgt := range c.targets {
 			cwr, err := tgt.convertRecord(i)
 			if err != nil {
