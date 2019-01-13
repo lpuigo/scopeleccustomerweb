@@ -1,8 +1,23 @@
 package ifsrecords
 
 import (
+	"github.com/lpuig/scopeleccustomerweb/convert"
 	"github.com/lpuig/scopeleccustomerweb/recordset"
+	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/transform"
+	"io"
 )
+
+type IFSConverter struct {
+	convert.FileConverter
+}
+
+func NewIFSConverter(infile string) IFSConverter {
+	cf := func(r io.Reader) io.Reader {
+		return transform.NewReader(r, charmap.Windows1252.NewDecoder())
+	}
+	return IFSConverter{FileConverter: convert.NewFileConverter(infile, cf)}
+}
 
 func NewIFSActivitiesRecords() *recordset.RecordSet {
 	rs := recordset.NewRecordSet()
